@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     int currentQuesitonId;
     int score;
-    boolean checkCheat;
+    boolean checkCheat = false;
     TextView question;
     Button answer0Button;
     Button answer1Button;
@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Question currentQuestion = questionArrayList.get(currentQuesitonId);
+                checkCheat = true;
+
                 int currentRightAnswer = currentQuestion.getRightAnswer();
                 if (currentRightAnswer == 0) {
                     answer0Button.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.buttonCheat));
@@ -108,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
             final Intent intent = new Intent(this, FinishActivity.class);
             intent.putExtra("score", score);
             intent.putExtra("total", questionArrayList.size());
+            intent.putExtra("checkCheat", checkCheat);
             startActivity(intent);
         } else {
             question = (TextView) findViewById(R.id.textView);

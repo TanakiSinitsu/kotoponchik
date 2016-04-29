@@ -16,6 +16,7 @@ public class FinishActivity extends AppCompatActivity {
         setContentView(R.layout.activity_finish);
         int score = getIntent().getIntExtra("score", 0);
         int total = getIntent().getIntExtra("total", 0);
+        boolean checkCheat = getIntent().getBooleanExtra("checkCheat", false);
         TextView scoreView = (TextView) findViewById(R.id.quantity);
         scoreView.setText(score + " out of " + total + " right answers");
         if (score == 0) {
@@ -24,11 +25,11 @@ public class FinishActivity extends AppCompatActivity {
         }
             else if (score <= total/4){
             pt = (TextView) findViewById(R.id.pt);
-            pt.setText("You need to be learning more");
+            pt.setText("You need to be learning more :/");
             }
         else if (score <= total/2 ){
             pt = (TextView) findViewById(R.id.pt);
-            pt.setText("Not cool, bro.");
+            pt.setText("You tried, bro.");
         }
         else if (score <= total/4*3){
             pt = (TextView) findViewById(R.id.pt);
@@ -40,7 +41,11 @@ public class FinishActivity extends AppCompatActivity {
         }
         else if (score == total){
             pt = (TextView) findViewById(R.id.pt);
-            pt.setText("Welcome home, Master");
+            pt.setText("Welcome home, Master.");
+        }
+        if (checkCheat == true) {
+            pt = (TextView) findViewById(R.id.pt);
+            pt.setText(pt.getText().toString() + " ...Oh, and you cheater.");
         }
         Button again = (Button) findViewById(R.id.again);
         again.setOnClickListener(new View.OnClickListener() {
