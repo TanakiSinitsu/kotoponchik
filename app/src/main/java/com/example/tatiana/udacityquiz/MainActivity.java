@@ -2,6 +2,7 @@ package com.example.tatiana.udacityquiz;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     int currentQuesitonId;
     int score;
+    int requestCode = 1;
     boolean checkCheat = false;
     TextView question;
     Button answer0Button;
@@ -42,15 +44,8 @@ public class MainActivity extends AppCompatActivity {
         questionArrayList.add(new Question("11. Proper variable declaration", "DataType  variableName = initialValue;", "VariableName initialValue = dataType;", "VariableName dataType = initialValue;", 0));
         questionArrayList.add(new Question("12. Element of debugging", "Stopbutton", "Breakpoint", "Endline", 1));
 
-        currentQuesitonId = -1;
-        score = 0;
+        init();
 
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        progressBar.setMax(questionArrayList.size());
-        progressBar.setProgress(0);
-
-
-        UpdateAnswer();
         answer0Button = (Button) findViewById(R.id.a0);
         answer1Button = (Button) findViewById(R.id.a1);
         answer2Button = (Button) findViewById(R.id.a2);
@@ -103,6 +98,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void init() {
+        currentQuesitonId = -1;
+        score = 0;
+        checkCheat = false;
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        progressBar.setMax(questionArrayList.size());
+        progressBar.setProgress(0);
+
+        UpdateAnswer();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == this.requestCode && resultCode == RESULT_OK) {
+            init();
+        }
+    }
+
     private void UpdateAnswer() {
         currentQuesitonId++;
         progressBar.incrementProgressBy(1);
@@ -111,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("score", score);
             intent.putExtra("total", questionArrayList.size());
             intent.putExtra("checkCheat", checkCheat);
-            startActivity(intent);
+            startActivityForResult(intent, requestCode);
         } else {
             question = (TextView) findViewById(R.id.textView);
             answer0Button = (Button) findViewById(R.id.a0);
