@@ -1,6 +1,8 @@
 package com.example.tatiana.udacityquiz;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +13,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    int currentAnswer;
+    int currentQuesitonId;
     int score;
+    boolean checkCheat;
     TextView question;
     Button answer0Button;
     Button answer1Button;
@@ -39,20 +42,13 @@ public class MainActivity extends AppCompatActivity {
         questionArrayList.add(new Question("11. Proper variable declaration", "DataType  variableName = initialValue;", "VariableName initialValue = dataType;", "VariableName dataType = initialValue;", 0));
         questionArrayList.add(new Question("12. Element of debugging", "Stopbutton", "Breakpoint", "Endline", 1));
 
-        currentAnswer = -1;
+        currentQuesitonId = -1;
         score = 0;
-
-        cheat = (Button) findViewById(R.id.cheat);
-        cheat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setMax(questionArrayList.size());
         progressBar.setProgress(0);
+
 
         UpdateAnswer();
         answer0Button = (Button) findViewById(R.id.a0);
@@ -61,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         answer0Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (questionArrayList.get(currentAnswer).getRightAnswer() == 0) {
+                if (questionArrayList.get(currentQuesitonId).getRightAnswer() == 0) {
                     score++;
                 }
                 UpdateAnswer();
@@ -70,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         answer1Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (questionArrayList.get(currentAnswer).getRightAnswer() == 1) {
+                if (questionArrayList.get(currentQuesitonId).getRightAnswer() == 1) {
                     score++;
                 }
                 UpdateAnswer();
@@ -79,18 +75,36 @@ public class MainActivity extends AppCompatActivity {
         answer2Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (questionArrayList.get(currentAnswer).getRightAnswer() == 2) {
+                if (questionArrayList.get(currentQuesitonId).getRightAnswer() == 2) {
                     score++;
                 }
                 UpdateAnswer();
             }
         });
+
+        cheat = (Button) findViewById(R.id.cheat);
+        cheat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Question currentQuestion = questionArrayList.get(currentQuesitonId);
+                int currentRightAnswer = currentQuestion.getRightAnswer();
+                if (currentRightAnswer == 0) {
+                    answer0Button.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.buttonCheat));
+                }
+                if (currentRightAnswer == 1) {
+                    answer1Button.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.buttonCheat));
+                }
+                if (currentRightAnswer == 2) {
+                    answer2Button.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.buttonCheat));
+                }
+            }
+        });
     }
 
     private void UpdateAnswer() {
-        currentAnswer++;
+        currentQuesitonId++;
         progressBar.incrementProgressBy(1);
-        if (questionArrayList.size() <= currentAnswer)  {
+        if (questionArrayList.size() <= currentQuesitonId)  {
             final Intent intent = new Intent(this, FinishActivity.class);
             intent.putExtra("score", score);
             intent.putExtra("total", questionArrayList.size());
@@ -100,7 +114,10 @@ public class MainActivity extends AppCompatActivity {
             answer0Button = (Button) findViewById(R.id.a0);
             answer1Button = (Button) findViewById(R.id.a1);
             answer2Button = (Button) findViewById(R.id.a2);
-            Question q = questionArrayList.get(currentAnswer);
+            answer0Button.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.cancelCheat));
+            answer1Button.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.cancelCheat));
+            answer2Button.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.cancelCheat));
+            Question q = questionArrayList.get(currentQuesitonId);
             question.setText(q.getQuestionText());
             answer0Button.setText(q.getAnswer1());
             answer1Button.setText(q.getAnswer2());
